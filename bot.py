@@ -2,6 +2,7 @@ from telethon.sync import TelegramClient
 from telethon.tl import functions, types
 from telethon import events, Button
 from telethon.types import Message
+import ast
 # Replace 'YOUR_API_KEY' with your actual Telegram Bot API key
 client = TelegramClient('bot', 26560112, 'f0bb00853bfd5a2d250f8182d3466703').start(bot_token='6304262027:AAGEtu1B_E5JLKVtRdvkk8Ot9MFDtnAwuFo')
 # Start the client
@@ -45,13 +46,9 @@ async def callback(event):
 
 @client.on(events.CallbackQuery(pattern=b'start_sending'))
 async def callback(event):
-    await client.edit_message(event.sender_id, event.message_id,'Начало россылки...')
+    await client.edit_message(event.sender_id, event.message_id,'Рассылка началась! Подождите, пожалуйста.')
     current_message = message_states[event.chat_id]
-    if isinstance(current_message, Message):
-        await client.send_message(entity=404465503, message=current_message)
-    else:
-        await client.send_message(entity=404465503, file=current_message[0], message = current_message[1])
-        
+    await current_message.forward_to("FBMarket88")
     message_states[event.chat_id] = None
 
 #Обработчик текста и картинок
@@ -66,10 +63,10 @@ async def handle_message(event):
             elif current_state == "awaiting_input":
                 await client.send_message(entity=event.chat_id, message=event.message)
                 await event.respond('Вы уверены, что хотите разослать именно это сообщение?', buttons=[
-                [Button.inline("Да, я уверен (начать рассылку)", b"start_sending")],[Button.inline("Нет, я ошибся", b"creating_message")]
+                [Button.inline("Да, я уверен (начать рассылку)", b"start_sending")],[Button.inline("Нет, я ошибся (написать заново)", b"creating_message")]
                 ])
                 user_states[event.chat_id] = None
-                message_states[event.chat_id] = event.message
+                message_states[event.chat_id] = event
                 print("I get an text")
 
 #Обработчик альбомов 
@@ -85,10 +82,10 @@ async def handle_message(event):
         elif current_state == "awaiting_input":
             await client.send_message(entity=event.chat_id,file=event.messages, message=event.original_update.message.message)
             await event.respond('Вы уверены, что хотите разослать именно это сообщение?', buttons=[
-            [Button.inline("Да, я уверен (начать рассылку)", b"start_sending")],[Button.inline("Нет, я ошибся", b"creating_message")]
+            [Button.inline("Да, я уверен (начать рассылку)", b"start_sending")],[Button.inline("Нет, я ошибся (написать заново)", b"creating_message")]
             ])
             user_states[event.chat_id] = None
-            message_data = (event.messages, event.original_update.message.message)
+            message_data = event
             message_states[event.chat_id] = message_data
             print("I get an album")
 
@@ -110,7 +107,21 @@ async def handle_message(event):
                 message_states[event.chat_id] = event.message
                 print("I get an text")
 
-   
+#обработка колбека после ролссилки
+@client.on(events.NewMessage(from_users=["FBMarket88"]))
+async def handle_message(event):
+    try:
+        response = ast.literal_eval(event.message.message)
+        print(response["sender_id"])
+        message = (
+    f'<i>Успешно отправлено</i> <b>{response["sent"]}</b> <i>пользователям,</i> '
+    f'<i>заблокировано</i> <b>{response["blocked"]}</b>'
+)
+        await client.send_message(entity=response["sender_id"], message=message ,parse_mode='html', buttons=[[Button.inline("Назад в меню", b"menu")]])
+    except Exception as e:
+        print(e)
+
+
 with client:
     client.run_until_disconnected()
 
