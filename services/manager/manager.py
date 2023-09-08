@@ -1,7 +1,7 @@
 from telethon.sync import TelegramClient
 from telethon.tl import functions, types
 from telethon import events, Button
-from telethon.types import Message
+from telethon.types import MessageMediaPhoto
 import ast
 from keyGen import keyGenerator
 import sys
@@ -61,9 +61,12 @@ async def callback(event):
 async def callback(event):
     await client.edit_message(event.sender_id, event.message_id,'Рассылка началась! Подождите, пожалуйста.')
     current_message = message_states[event.chat_id]
-    if current_message.grouped_id:
+    if isinstance(current_message.media, events.Album):
         text_html = repr(current_message.original_update.message.text + "SENDER_ID:" + str(event.chat_id) + 'TO_USERS="' + str(user_database[event.chat_id])+ '"').replace("\\n", "\r\n").replace("'","")
         await client.send_message(entity=config.SPAM_BOT_USERNAME,file=current_message.messages,parse_mode="HTML", message=text_html)
+    elif isinstance(current_message.message.media, MessageMediaPhoto):
+        text_html = repr(current_message.message.text + "SENDER_ID:" + str(event.chat_id)+ 'TO_USERS="' + str(user_database[event.chat_id])+ '"').replace("\\n", "\r\n").replace("'","")
+        await client.send_message(entity = config.SPAM_BOT_USERNAME, file=current_message.message.media.photo, message=text_html, parse_mode="html")
     else:
         text_html = repr(current_message.message.text + "SENDER_ID:" + str(event.chat_id)+ 'TO_USERS="' + str(user_database[event.chat_id])+ '"').replace("\\n", "\r\n").replace("'","")
         await client.send_message(entity = config.SPAM_BOT_USERNAME, message = text_html, parse_mode="html")
