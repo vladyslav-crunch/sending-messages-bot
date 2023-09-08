@@ -6,7 +6,7 @@ import ast
 from keyGen import keyGenerator
 import config 
 # Replace 'YOUR_API_KEY' with your actual Telegram Bot API key
-client = TelegramClient('bot', config.APP_ID, config.API_HASH).start(bot_token=config.BOT_TOKEN)
+client = TelegramClient('bot', config.MANAGER_APP_ID, config.MANAGER_API_HASH).start(bot_token=config.MANAGER_BOT_TOKEN)
 # Start the client
 
 client.parse_mode = 'HTML'
@@ -81,13 +81,11 @@ async def handle_message(event):
                 await event.respond('Вы уверены, что хотите разослать именно это сообщение?', buttons=keyGenerator("confirming_message"))
                 user_states[event.chat_id] = None
                 message_states[event.chat_id] = event
-                print("I get an text")
             elif current_state == "awaiting_database":
                 await client.send_message(entity=event.chat_id, message=event.message)
                 await event.respond('Вы уверены, что хотите разослать сообщение именно этим пользователям?', buttons=keyGenerator("confirming_database"))
                 user_states[event.chat_id] = None
                 user_database[event.chat_id] = event.message.message
-                print("I get an text")
 
 # Album handler
 
@@ -106,7 +104,7 @@ async def handle_message(event):
             user_states[event.chat_id] = None
             message_data = event
             message_states[event.chat_id] = message_data
-            print("I get an album")
+
 
 
 # Post sending callback handler
@@ -115,7 +113,6 @@ async def handle_message(event):
 async def handle_message(event):
     try:
         response = ast.literal_eval(event.message.message)
-        print(response["sender_id"])
         message = (f'<i>Успешно отправлено</i> <b>{response["sent"]}</b> <i>пользователям,</i> 'f'<i>заблокировано</i> <b>{response["blocked"]}</b>')
         await client.send_message(entity=response["sender_id"], message=message ,parse_mode='html', buttons=keyGenerator("menu"))
     except Exception as e:
