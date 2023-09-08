@@ -1,9 +1,10 @@
+import sys
+sys.path.append('./cfg')
+import config
+import re
+
 from telethon.sync import TelegramClient
 from telethon import TelegramClient, events
-import sys
-sys.path.append('../cfg')
-from cfg import config
-import re
 
 
 def process_message(message):
