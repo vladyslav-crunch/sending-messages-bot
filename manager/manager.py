@@ -4,7 +4,7 @@ from telethon import events, Button
 from telethon.types import Message
 import ast
 from keyGen import keyGenerator
-import config 
+import cfg.config as config 
 # Replace 'YOUR_API_KEY' with your actual Telegram Bot API key
 client = TelegramClient('bot', config.MANAGER_APP_ID, config.MANAGER_API_HASH).start(bot_token=config.MANAGER_BOT_TOKEN)
 # Start the client

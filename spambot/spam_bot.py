@@ -1,6 +1,8 @@
 from telethon.sync import TelegramClient
 from telethon import TelegramClient, events
-import config
+import sys
+sys.path.append('../cfg')
+from cfg import config
 import re
 
 
