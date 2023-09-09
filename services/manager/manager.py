@@ -76,21 +76,22 @@ async def callback(event):
 
 @client.on(events.NewMessage(func=lambda event: True))
 async def handle_message(event):
-    if not event.grouped_id:
-        if event.chat_id in user_states:
-            current_state = user_states[event.chat_id]
-            if not event.is_private:
-                return
-            elif current_state == "awaiting_input":
-                await client.send_message(entity=event.chat_id, message=event.message)
-                await event.respond('Вы уверены, что хотите разослать именно это сообщение?', buttons=keyGenerator("confirming_message"))
-                user_states[event.chat_id] = None
-                message_states[event.chat_id] = event
-            elif current_state == "awaiting_database":
-                await client.send_message(entity=event.chat_id, message=event.message)
-                await event.respond('Вы уверены, что хотите разослать сообщение именно этим пользователям?', buttons=keyGenerator("confirming_database"))
-                user_states[event.chat_id] = None
-                user_database[event.chat_id] = event.message.message
+    if isinstance(event, events.Album):
+        return
+    if event.chat_id in user_states:
+        current_state = user_states[event.chat_id]
+        if not event.is_private:
+            return
+        elif current_state == "awaiting_input":
+            await client.send_message(entity=event.chat_id, message=event.message)
+            await event.respond('Вы уверены, что хотите разослать именно это сообщение?', buttons=keyGenerator("confirming_message"))
+            user_states[event.chat_id] = None
+            message_states[event.chat_id] = event
+        elif current_state == "awaiting_database":
+            await client.send_message(entity=event.chat_id, message=event.message.text)
+            await event.respond('Вы уверены, что хотите разослать сообщение именно этим пользователям?', buttons=keyGenerator("confirming_database"))
+            user_states[event.chat_id] = None
+            user_database[event.chat_id] = event.message.message
 
 # Album handler
 
@@ -109,6 +110,11 @@ async def handle_message(event):
             user_states[event.chat_id] = None
             message_data = event
             message_states[event.chat_id] = message_data
+        elif current_state == "awaiting_database":
+            await client.send_message(entity=event.chat_id, message=event.original_update.message.text)
+            await event.respond('Вы уверены, что хотите разослать сообщение именно этим пользователям?', buttons=keyGenerator("confirming_database"))
+            user_states[event.chat_id] = None
+            user_database[event.chat_id] = event.original_update.message.text
 
 
 
@@ -127,5 +133,3 @@ async def handle_message(event):
 
 with client:
     client.run_until_disconnected()
-
-
