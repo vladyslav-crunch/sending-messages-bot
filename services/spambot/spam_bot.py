@@ -63,5 +63,5 @@ async def sender_bH(event):
             pass
     message_to_send = {"sent":sent_counter,"blocked":blocked_counter,"sender_id":int(process_message(recieved_message)["sender_id"])}
     await client.send_message(entity=event.chat_id, message=str(message_to_send))
-    
+
 client.run_until_disconnected()
