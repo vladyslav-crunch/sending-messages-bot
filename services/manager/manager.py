@@ -35,6 +35,7 @@ async def send_welcome(event):
 
 @client.on(events.CallbackQuery(pattern=b'menu'))
 async def callback(event):
+    await client.delete_messages(event.chat_id, event.message_id)
     await event.respond("Вы находитесь в главном меню управления ботом. Пожалуйста выберите команду, которая вас интересует", buttons = keyGenerator("creating_database"))
     user_states[event.chat_id] = None
     user_database[event.chat_id] = None
@@ -44,6 +45,7 @@ async def callback(event):
 @client.on(events.CallbackQuery(pattern=b'creating_message'))
 async def callback(event):
     chat_id = event.chat_id
+    await client.delete_messages(event.chat_id, event.message_id)
     await event.respond("Пожалуйста, напишите сообщение, которое хотите отправить", buttons = keyGenerator("menu"))
     user_states[chat_id] = "awaiting_input"
 
@@ -52,6 +54,7 @@ async def callback(event):
 @client.on(events.CallbackQuery(pattern=b'create_database'))
 async def callback(event):
     chat_id = event.chat_id
+    await client.delete_messages(event.chat_id, event.message_id)
     await event.respond("Пожалуйста, напишите юзернеймы пользователей, которым хотите отправить сообщение в формате: \n\ntom\nanna\nbob\n...", buttons = keyGenerator("menu"))
     user_states[chat_id] = "awaiting_database"
 
@@ -76,7 +79,7 @@ async def callback(event):
 
 @client.on(events.NewMessage(func=lambda event: True))
 async def handle_message(event):
-    if isinstance(event, events.Album):
+    if event.grouped_id:
         return
     if event.chat_id in user_states:
         current_state = user_states[event.chat_id]
@@ -88,8 +91,8 @@ async def handle_message(event):
             user_states[event.chat_id] = None
             message_states[event.chat_id] = event
         elif current_state == "awaiting_database":
-            await client.send_message(entity=event.chat_id, message=event.message.text)
-            await event.respond('Вы уверены, что хотите разослать сообщение именно этим пользователям?', buttons=keyGenerator("confirming_database"))
+            html_text = "<b>Вы уверены, что хотите отослать именно этим пользователям ?</b>\r\n\n" + event.message.text
+            await client.send_message(entity=event.chat_id, message=html_text, parse_mode="html", buttons=keyGenerator("confirming_database"))
             user_states[event.chat_id] = None
             user_database[event.chat_id] = event.message.message
 
@@ -111,8 +114,8 @@ async def handle_message(event):
             message_data = event
             message_states[event.chat_id] = message_data
         elif current_state == "awaiting_database":
-            await client.send_message(entity=event.chat_id, message=event.original_update.message.text)
-            await event.respond('Вы уверены, что хотите разослать сообщение именно этим пользователям?', buttons=keyGenerator("confirming_database"))
+            html_text = "<b>Вы уверены, что хотите отослать именно этим пользователям ?</b>\r\n\n" + event.original_update.message.text
+            await client.send_message(entity=event.chat_id, message=html_text, parse_mode="html", buttons=keyGenerator("confirming_database"))
             user_states[event.chat_id] = None
             user_database[event.chat_id] = event.original_update.message.text
 
