@@ -46,7 +46,7 @@ async def sender_bH(event):
         try:
             user_to_add = await client.get_entity(i)
             if user_to_add not in users_to_send:
-                users_to_send.append()
+                users_to_send.append(user_to_add)
         except Exception as e:
             blocked_counter+=1
             pass
