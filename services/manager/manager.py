@@ -116,8 +116,6 @@ async def handle_message(event):
             user_states[event.chat_id] = None
             user_database[event.chat_id] = event.original_update.message.text
 
-
-
 # Post sending callback handler
 
 @client.on(events.NewMessage(from_users=[config.SPAM_BOT_USERNAME]))

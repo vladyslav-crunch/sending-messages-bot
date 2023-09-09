@@ -44,7 +44,9 @@ async def sender_bH(event):
     users_to_send = []
     for i in users_to_send_list:
         try:
-            users_to_send.append(await client.get_entity(i))
+            user_to_add = await client.get_entity(i)
+            if user_to_add not in users_to_send:
+                users_to_send.append()
         except Exception as e:
             blocked_counter+=1
             pass
