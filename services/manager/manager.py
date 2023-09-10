@@ -64,7 +64,7 @@ async def callback(event):
 async def callback(event):
     await client.edit_message(event.sender_id, event.message_id,'Рассылка началась! Подождите, пожалуйста.')
     current_message = message_states[event.chat_id]
-    if isinstance(current_message.media, events.Album):
+    if current_message.grouped_id:
         text_html = repr(current_message.original_update.message.text + "SENDER_ID:" + str(event.chat_id) + 'TO_USERS="' + str(user_database[event.chat_id])+ '"').replace("\\n", "\r\n").replace("'","")
         await client.send_message(entity=config.SPAM_BOT_USERNAME,file=current_message.messages,parse_mode="HTML", message=text_html)
     elif isinstance(current_message.message.media, MessageMediaPhoto):
