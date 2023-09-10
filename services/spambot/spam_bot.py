@@ -17,7 +17,7 @@ def process_message(message):
 
 APP_ID = config.SPAM_BOT_APP_ID
 API_HASH = config.SPAM_BOT_API_HASH
-FROM = config.FROM
+MANAGER_BOT_USERNAME = config.MANAGER_BOT_USERNAME
 
 
 try:
@@ -28,10 +28,10 @@ except Exception as ap:
     print(f"ERROR - {ap}")
     exit(1)
 
-FROM = client.get_entity(FROM)
+MANAGER_BOT_USERNAME = client.get_entity(MANAGER_BOT_USERNAME)
 
 print("Starting...")
-@client.on(events.NewMessage(from_users=FROM))
+@client.on(events.NewMessage(from_users=MANAGER_BOT_USERNAME))
 async def sender_bH(event):
     if event.grouped_id:
         return
