@@ -1,5 +1,6 @@
 # sending-messages-bot
-Bot for sending messages to different users from database. Managed from another bot.
+
+Sending Messages Bot is a powerful tool that allows you to send messages to different users directly from a database, all managed through another Telegram bot. With seamless integration and efficient message distribution, it simplifies communication with your audience.
 
 # Telegram Manager and Spam Bot Setup Guide
 
@@ -23,7 +24,7 @@ This guide will help you set up both a Telegram Manager and a Spam Bot using Pyt
 
 1. Create a `.env` file in the root directory of your project.
 
-2. Add the following lines to the `.env` file, replacing `<YOUR_TOKEN>`, `<YOUR_API_ID>`, and `<YOUR_API_HASH>` with the values you obtained in the previous steps:
+2. Add the following lines to the `.env` file, replacing `<MANAGER_APP_ID>`, `<MANAGER_API_HASH>`, `<MANAGER_BOT_TOKEN>` and `<MANAGER_BOT_USERNAME>` with the values you obtained in the previous steps:
 
 3. Save the `.env` file.
 
@@ -43,9 +44,7 @@ This guide will help you set up both a Telegram Manager and a Spam Bot using Pyt
 
 1. Open the `.env` file in the root directory of your project.
 
-2. Modify the `.env` file to include the API credentials for the Spam Bot. Replace `<YOUR_TOKEN>`, `<YOUR_API_ID>`, and `<YOUR_API_HASH>` with the values obtained for the Spam Bot:
-
-- `FROM` should be set to the username of your Manager Bot.
+2. Modify the `.env` file to include the API credentials for the Spam Bot. Replace `SPAM_BOT_USERNAME`, `<SPAM_BOT_APP_ID>`, and `<SPAM_BOT_API_HASH>` with the values obtained for the Spam Bot
 
 3. Save the `.env` file.
 
