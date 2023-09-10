@@ -22,9 +22,9 @@ This guide will help you set up both a Telegram Manager and a Spam Bot using Pyt
 
 ### Step 3: Configure the .env File
 
-1. Create a `.env` file in the root directory of your project.
+1. Open the `.env` file in the root directory of your project.
 
-2. Add the following lines to the `.env` file, replacing `<MANAGER_APP_ID>`, `<MANAGER_API_HASH>`, `<MANAGER_BOT_TOKEN>` and `<MANAGER_BOT_USERNAME>` with the values you obtained in the previous steps:
+2. Modify the `.env` file, replacing `<MANAGER_APP_ID>`, `<MANAGER_API_HASH>`, `<MANAGER_BOT_TOKEN>` and `<MANAGER_BOT_USERNAME>` with the values you obtained in the previous steps:
 
 3. Save the `.env` file.
 
