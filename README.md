@@ -48,6 +48,17 @@ This guide will help you set up both a Telegram Manager and a Spam Bot using Pyt
 
 3. Save the `.env` file.
 
+## Install Requirements
+
+1. Open your terminal or command prompt.
+
+2. Navigate to the root directory of your project.
+
+3. Run the following command to install all the required dependencies from `requirements.txt`:
+
+```bash
+pip install -r requirements.txt
+```
 ## Running the Bots
 
 ### Running the Manager Bot:
